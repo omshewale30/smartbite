@@ -16,7 +16,11 @@ const {
 
 
 const app = express();
-app.use(cors()); // Allows frontend to connect
+app.use(cors({
+    origin: ["http://localhost:5173", "https://your-frontend.vercel.app"], // Add your frontend’s Vercel URL once deployed
+    methods: ["GET", "POST"], // Allow specific methods
+    allowedHeaders: ["Content-Type"], // Allow specific headers
+}));
 app.use(express.json({limit:"10mb"})); // Parses JSON request
 // s
 
