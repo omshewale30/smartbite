@@ -1,6 +1,8 @@
+const API_URL = "https://backend-iqml9zhar-omshewale30s-projects.vercel.app/";
+
 export const fetchRecipes = async (data, isImage = false) => {
     try {
-        const response = await fetch("http://localhost:5000/recipes", {
+        const response = await fetch(`${API_URL}recipes`, {
             method: "POST",
             headers: isImage ? {} : { "Content-Type": "application/json" },
             body: data,
@@ -15,7 +17,7 @@ export const fetchRecipes = async (data, isImage = false) => {
 
 export const fetchIngredients = async (data) => {
     try {
-        const response = await fetch("http://localhost:5000/ingredients", {
+        const response = await fetch(`${API_URL}ingredients`, {
             method: "POST",
             body: data,
         });
