@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const { OpenAI } = require("openai");
+
 
 const multer = require("multer");
 const fs = require("fs").promises;
@@ -38,7 +38,7 @@ const vertexAI = new VertexAI({
     project,
     location,
     googleAuthOptions: {
-        keyFilename: "./studied-brand-452423-t6-8170f48f7874.json", // Path to your service account key
+        keyFilename: "backend/studied-brand-452423-t6-8170f48f7874.json", // Path to your service account key
     },
 });
 const textGenerativeModel = vertexAI.getGenerativeModel({
@@ -62,11 +62,20 @@ const visionGenerativeModel = vertexAI.getGenerativeModel({
 
 // Function to clean Markdown from response
 function cleanJsonResponse(text) {
-    // Remove ```json and ``` markers
-    const cleaned = text.replace(/```json/g, "").replace(/```/g, "").trim();
-    return cleaned;
+    let cleaned = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    try {
+        const parsed = JSON.parse(cleaned);
+        // Ensure nutrition exists
+        if (!parsed.nutrition) {
+            parsed.nutrition = { protein: "N/A", carbs: "N/A", fat: "N/A" };
+            cleaned = JSON.stringify(parsed); // Re-stringify with fallback
+        }
+        return cleaned;
+    } catch (error) {
+        console.error("Initial Parse Error:", error);
+        throw error;
+    }
 }
-
 // Extract ingredients from image
 async function getIngredientsFromImage(imagePath) {
     try {
@@ -143,40 +152,31 @@ app.post("/ingredients", upload.single("image"), async (req, res) => {
     }
 });
 
-app.post("/recipes",upload.single("image") , async (req, res) => {
+app.post("/recipes", upload.single("image"), async (req, res) => {
     let ingredients = req.body.ingredients;
-
     try {
         if (req.file) {
             ingredients = await getIngredientsFromImage(req.file.path);
-            await fs.unlink(req.file.path); // Delete the image
+            await fs.unlink(req.file.path);
         }
-        console.log("Ingredients:", ingredients);
+        if (!ingredients) return res.status(400).json({ error: "No ingredients provided" });
 
-    if (!ingredients) {
-        return res.status(400).json({ error: "No ingredients provided" });
-    }
-
-
-    const prompt = `
+        const prompt = `
       Suggest a healthy recipe using these ingredients: ${ingredients}.
-      Format the response as JSON with:
-      - name: string
-      - steps: string
-      - calories: number
-      - nutrition: object with protein, carbs, fat (as strings with units)
-      Provide only the JSON object, no extra text or markdown.
+      Return a complete JSON object with exactly these fields:
+      - "name": string (recipe name)
+      - "steps": string (cooking instructions)
+      - "calories": number (total calories)
+      - "nutrition": object with "protein", "carbs", "fat" (each as strings with units, e.g., "20g")
+      Provide only the JSON object, no extra text, markdown, or incomplete data.
     `;
         const response = await textGenerativeModel.generateContent(prompt);
-        console.log("LLM Response:", response);
-
         const recipeText = response.response.candidates[0].content.parts[0].text;
-        console.log("Recipe Text:", recipeText);
-        const cleanText = cleanJsonResponse(recipeText); // Clean the response
-        const recipe = JSON.parse(cleanText); // Gemini should return JSON based on prompt
+        console.log("Raw Recipe Text:", recipeText); // Debug raw output
+        const cleanText = cleanJsonResponse(recipeText);
+        const recipe = JSON.parse(cleanText);
         res.json(recipe);
     } catch (error) {
-
         console.error("VertexAI Error:", error);
         res.status(500).json({ error: error.message });
     }

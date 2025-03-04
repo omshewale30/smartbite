@@ -19,7 +19,7 @@ function IngredientInput({ setRecipes, setLoading }) {
         setLoading(true);
         try {
             if(!ingredients) throw new Error("No ingredients provided");
-            const recipeData = await fetchRecipes(ingredients, false);
+            const recipeData = await fetchRecipes(JSON.stringify({ingredients}), false);
             setRecipes(recipeData);
         }catch (error){
             console.error("API Error:", error);
