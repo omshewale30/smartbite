@@ -5,6 +5,7 @@ const cors = require("cors");
 const multer = require("multer");
 const fs = require("fs").promises;
 const path = require("path");
+const fsSync = require("fs"); // Synchronous methods
 
 
 const {
@@ -16,10 +17,18 @@ const {
 
 const app = express();
 app.use(cors()); // Allows frontend to connect
-app.use(express.json({limit:"10mb"})); // Parses JSON requests
+app.use(express.json({limit:"10mb"})); // Parses JSON request
+// s
+
+const uploadDir = "/tmp/uploads";
+if (!fsSync.existsSync(uploadDir)) {
+    fsSync.mkdirSync(uploadDir, { recursive: true });
+}
 
 const storage = multer.diskStorage({
-    destination: "uploads/",
+    destination: (req, file, cb) => {
+        cb(null, uploadDir); // Use /tmp/uploads
+    },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
         const ext = path.extname(file.originalname); // Get original extension
@@ -139,6 +148,7 @@ async function getIngredientsFromImage(imagePath) {
         throw error; // Re-throw the error to be caught by the main handler
     }
 }
+app.get("/", (req, res) => res.send("Express on Vercel"));
 app.post("/ingredients", upload.single("image"), async (req, res) => {
     let ingredients = req.body.ingredients;
 
