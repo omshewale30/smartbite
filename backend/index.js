@@ -181,5 +181,7 @@ app.post("/recipes", upload.single("image"), async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+const PORT = process.env.PORT || 5000;
 
-app.listen(5000, () => console.log("Backend running on http://localhost:5000"));
+app.listen(PORT, () => console.log("Backend running on http://localhost:5000"));
+module.exports = app;
