@@ -38,7 +38,10 @@ const vertexAI = new VertexAI({
     project,
     location,
     googleAuthOptions: {
-        keyFilename: "backend/studied-brand-452423-t6-8170f48f7874.json", // Path to your service account key
+        credentials: {
+      client_email: process.env.GCP_CLIENT_EMAIL,
+      private_key: process.env.GCP_PRIVATE_KEY,
+    },
     },
 });
 const textGenerativeModel = vertexAI.getGenerativeModel({
