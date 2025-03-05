@@ -1,4 +1,4 @@
-import {Box, Input, Button, VStack, Text, HStack, IconButton, Spacer} from "@chakra-ui/react";
+import {Box, Input, Button, VStack, Text, HStack, IconButton, Spacer, Image} from "@chakra-ui/react";
 import {
     FileUploadList,
     FileUploadRoot,
@@ -6,11 +6,12 @@ import {
 } from "@/components/ui/file-upload"
 import { HiUpload, HiTrash } from "react-icons/hi";
 import {fetchIngredients, fetchRecipes} from "../services/api";
-import { useState } from "react";
+import {useEffect, useState} from "react";
 
 function IngredientInput({ setRecipes, setLoading }) {
     const [ingredients, setIngredients] = useState("");
     const [image, setImage] = useState(null);
+    const [imagePreview, setImagePreview] = useState(null);
     const [recognizedIngredients, setRecognizedIngredients] = useState([]);
     const [newIngredient, setNewIngredient] = useState("");
 
@@ -73,6 +74,20 @@ function IngredientInput({ setRecipes, setLoading }) {
     const deleteIngredient = (index) => {
         setRecognizedIngredients(recognizedIngredients.filter((_, i) => i !== index));
     }
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if(file){
+            setImage(file);
+            setImagePreview(URL.createObjectURL(file));
+        }
+    }
+    useEffect(() => {
+        return () => {
+            if(imagePreview){
+                URL.revokeObjectURL(imagePreview);
+            }
+        };
+    }, [imagePreview]);
 
     return (
         <VStack gap ={10}>
@@ -108,7 +123,10 @@ function IngredientInput({ setRecipes, setLoading }) {
                 <form onSubmit={handleImageSubmit}>
                     <VStack gap={4}
                         alignitems="center">
-                        <FileUploadRoot pl ={4}>
+                        <FileUploadRoot pl ={4}
+                                        accept="image/*"
+                                        onChange={handleImageChange}
+                                        disabled={ingredients}>
                             <FileUploadTrigger asChild>
                                 <Button
                                     variant="subtle"
@@ -116,17 +134,22 @@ function IngredientInput({ setRecipes, setLoading }) {
                                     as="label"
                                 >
                                     <HiUpload /> Upload Image
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        hidden
-                                        disabled={ingredients}
-                                        onChange={(e) => setImage(e.target.files[0])}
-                                    />
                                 </Button>
                             </FileUploadTrigger>
                             <FileUploadList />
                         </FileUploadRoot>
+                        {imagePreview && (
+                            <Box>
+                                <Image
+                                    src={imagePreview}
+                                    alt="Uploaded Image"
+                                    h="300px"
+                                    w="300px"
+                                    fit="contain"
+
+                                />
+                            </Box>
+                        )}
                         <Button type="submit" colorScheme="green" isDisabled={!image || ingredients}>
                             Recognize Ingredients
                         </Button>
