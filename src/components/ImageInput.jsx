@@ -46,18 +46,18 @@ export default function ImageInput({ setRecognizedIngredients, setLoading, textE
 
     return (
         <form onSubmit={handleSubmit}>
-            <VStack spacing={4}>
-                <FileUploadRoot>
-                    <FileUploadTrigger asChild>
-                        <Button variant="outline" size="sm" as="label">
-                            <HiUpload /> Upload Image
-                            <input
-                                type="file"
+            <VStack gap={4}>
+                <FileUploadRoot pl ={4}
                                 accept="image/*"
-                                hidden
-                                disabled={textEntered}
                                 onChange={handleImageChange}
-                            />
+                                disabled={textEntered}>
+                    <FileUploadTrigger asChild>
+                        <Button
+                            variant="subtle"
+                            size="sm"
+                            as="label"
+                        >
+                            <HiUpload /> Upload Image
                         </Button>
                     </FileUploadTrigger>
                     <FileUploadList />
