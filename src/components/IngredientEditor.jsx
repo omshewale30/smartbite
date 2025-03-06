@@ -39,20 +39,23 @@ export default function IngredientEditor({ recognizedIngredients, setRecognizedI
         setRecognizedIngredients([]);
         setDietaryRestriction("");
     };
+    const textColor = "gray.800";
 
     return (
         <VStack spacing={4} align="stretch">
-            <Text fontWeight="bold">Recognized Ingredients:</Text>
+            <Text fontWeight="bold" color = {textColor}>Recognized Ingredients:</Text>
             {recognizedIngredients.map((item, index) => (
                 <HStack key={index} justify="space-between">
-                    <Text>{item}</Text>
+                    <Text color ={textColor}>{item}</Text>
                     <IconButton
                         aria-label="Delete ingredient"
-                        icon={<HiTrash />}
                         size="sm"
-                        variant="ghost"
+
                         onClick={() => deleteIngredient(index)}
-                    />
+                    >
+                        <HiTrash />
+                    </IconButton>
+
                 </HStack>
             ))}
             <HStack>
@@ -61,15 +64,16 @@ export default function IngredientEditor({ recognizedIngredients, setRecognizedI
                     onChange={(e) => setNewIngredient(e.target.value)}
                     placeholder="Add another ingredient"
                     size="sm"
+                    color = {textColor}
                 />
-                <Button size="sm" onClick={addIngredient}>
-                    Add
+                <Button size="sm" colorPalette = "gray" onClick={addIngredient} variant="surface">
+                     Add
                 </Button>
             </HStack>
             <Button
-                colorScheme="green"
+                colorPalette="yellow"
                 onClick={handleRecipeGenerate}
-                isDisabled={!recognizedIngredients.length}
+                disabled={!recognizedIngredients.length}
             >
                 Generate Recipe
             </Button>

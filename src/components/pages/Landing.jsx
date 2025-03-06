@@ -220,7 +220,7 @@ function Landing() {
                                 <Box p={4} borderRadius="full" bg="#2F855A" color="white">
                                     <Icon as={FaBrain} w={8} h={8} />
                                 </Box>
-                                <Heading as="h3" size="lg">
+                                <Heading as="h3" size="lg" color={useColorModeValue("gray.800", "white")}>
                                     AI-Powered Recipes
                                 </Heading>
                                 <Text textAlign="center" color={useColorModeValue("gray.600", "gray.400")}>
@@ -242,7 +242,7 @@ function Landing() {
                                 <Box p={4} borderRadius="full" bg="#F6E05E" color="gray.800">
                                     <Icon as={FaAppleAlt} w={8} h={8} />
                                 </Box>
-                                <Heading as="h3" size="lg">
+                                <Heading as="h3" size="lg" color={useColorModeValue("gray.800", "white")}>
                                     Nutritional Insights
                                 </Heading>
                                 <Text textAlign="center" color={useColorModeValue("gray.600", "gray.400")}>
@@ -264,11 +264,11 @@ function Landing() {
                                 <Box p={4} borderRadius="full" bg="#2F855A" color="white">
                                     <Icon as={FaUtensils} w={8} h={8} />
                                 </Box>
-                                <Heading as="h3" size="lg">
-                                    Meal Planning
+                                <Heading as="h3" size="lg" color={useColorModeValue("gray.800", "white")}>
+                                    Zero Waste Cooking
                                 </Heading>
-                                <Text textAlign="center" color={useColorModeValue("gray.600", "gray.400")}>
-                                    Create weekly meal plans that are balanced, diverse, and tailored to your lifestyle and health goals.
+                                <Text textAlign="center" color={useColorModeValue("gray.600", "gray.400")} >
+                                    Snap a picture of your refrigerator, and we'll suggest recipes based on the ingredients you have.
                                 </Text>
                             </VStack>
                         </Grid>
@@ -306,7 +306,7 @@ function Landing() {
                         textAlign={{ base: "center", md: "left" }}
                     >
                         <VStack align={{ base: "center", md: "flex-start" }} mb={{ base: 6, md: 0 }}>
-                            <Heading size="md" mb={2}>
+                            <Heading size="md" mb={2} color={useColorModeValue("gray.800", "white")}>
                                 sm
                                 <Text as="span" color="#F6E05E">
                                     A

@@ -101,7 +101,7 @@ function RecipeCard({ recipe }) {
                                     justifyContent="center"
                                     mt={1}
                                 >
-                                    {index + 1}
+                                    {index+1}
                                 </Box>
                                 <Text color="gray.900">{step.trim()}.</Text>
                             </HStack>
@@ -120,7 +120,7 @@ function NutritionStat({ icon, label, value, accentColor }) {
             <Text fontSize="sm" fontWeight="bold" color={useColorModeValue("gray.600", "gray.400")}>
                 {label}
             </Text>
-            <Text fontSize="md" fontWeight="semibold">
+            <Text fontSize="md" fontWeight="bold" color="gray.900">
                 {value}
             </Text>
         </VStack>

@@ -73,7 +73,7 @@ export default function ImageInput({ setRecognizedIngredients, setLoading, textE
                         />
                     </Box>
                 )}
-                <Button type="submit" colorScheme="green" isDisabled={!image || textEntered}>
+                <Button type="submit" colorPalette="green" disabled={!image || textEntered}>
                     Recognize Ingredients
                 </Button>
             </VStack>
