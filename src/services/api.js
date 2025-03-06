@@ -1,4 +1,4 @@
-const API_URL = "https://backend-btgk54lsp-omshewale30s-projects.vercel.app/";
+const API_URL = "https://smartbite-backend.vercel.app/";
 
 export const fetchRecipes = async (data, isImage = false) => {
     try {
@@ -7,6 +7,7 @@ export const fetchRecipes = async (data, isImage = false) => {
             headers: isImage ? {} : { "Content-Type": "application/json" },
             body: data,
         });
+        console.log(response);
         if (!response.ok) throw new Error("Failed to fetch recipes");
         return await response.json();
     } catch (error) {
