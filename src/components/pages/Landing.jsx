@@ -10,6 +10,8 @@ import {
     HStack,
     Icon,
     Text,
+    LinkBox,
+    LinkOverlay,
     VStack,
 } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
@@ -193,7 +195,7 @@ function Landing() {
             </Box>
 
             {/* Features Section */}
-            <Box bg={useColorModeValue("gray.50", "gray.900")} py={20}>
+            <Box id="features" bg={useColorModeValue("gray.50", "gray.900")} py={20}>
                 <Container maxW="container.xl">
                     <VStack spacing={16}>
                         <VStack spacing={4} textAlign="center">

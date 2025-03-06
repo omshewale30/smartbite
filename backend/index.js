@@ -165,7 +165,7 @@ app.post("/recipes", upload.single("image"), async (req, res) => {
       Suggest a healthy recipe using these ingredients: ${ingredients}.
       Return a complete JSON object with exactly these fields:
       - "name": string (recipe name)
-      - "steps": string (cooking instructions)
+      - "steps": string (cooking instructions or steps numbered clearly)
       - "calories": number (total calories)
       - "nutrition": object with "protein", "carbs", "fat" (each as strings with units, e.g., "20g")
       Provide only the JSON object, no extra text, markdown, or incomplete data.

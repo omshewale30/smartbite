@@ -36,9 +36,9 @@ function RecipeCard({ recipe }) {
             transition="all 0.3s ease"
         >
             {/* Recipe Name and Badge */}
-            <Box bg={primaryColor} p={4} color="white">
+            <Box bg={accentColor} p={4} color="white">
                 <HStack justify="space-between" align="center">
-                    <Heading size="lg">{recipe.name}</Heading>
+                    <Heading size="lg" color = "gray.700">{recipe.name} </Heading>
                     <Badge colorScheme="yellow" fontSize="0.8em" p={1} borderRadius="full">
                         AI Generated
                     </Badge>
@@ -86,26 +86,32 @@ function RecipeCard({ recipe }) {
                         Cooking Instructions
                     </Heading>
                     <VStack align="stretch" spacing={3}>
-                        {recipe.steps.split(". ").map((step, index) => (
-                            <HStack key={index} align="flex-start">
-                                <Box
-                                    minWidth="24px"
-                                    height="24px"
-                                    borderRadius="full"
-                                    bg={primaryColor}
-                                    color="white"
-                                    fontSize="sm"
-                                    fontWeight="bold"
-                                    display="flex"
-                                    alignItems="center"
-                                    justifyContent="center"
-                                    mt={1}
-                                >
-                                    {index+1}
-                                </Box>
-                                <Text color="gray.900">{step.trim()}.</Text>
-                            </HStack>
-                        ))}
+                        {recipe.steps
+                            .split("\n") // Split on newlines
+                            .map((step) => step.trim()) // Remove leading/trailing whitespace
+                            .filter((step) => step) // Remove empty lines
+                            .map((step, index) => (
+                                <HStack key={index} align="flex-start">
+                                    <Box
+                                        minWidth="24px"
+                                        height="24px"
+                                        borderRadius="full"
+                                        bg={primaryColor}
+                                        color="white"
+                                        fontSize="sm"
+                                        fontWeight="bold"
+                                        display="flex"
+                                        alignItems="center"
+                                        justifyContent="center"
+                                        mt={1}
+                                    >
+                                        {index + 1}
+                                    </Box>
+                                    <Text color="gray.900">
+                                        {step.endsWith(".") ? step : `${step}.`} {/* Ensure each step ends with a period */}
+                                    </Text>
+                                </HStack>
+                            ))}
                     </VStack>
                 </Box>
             </VStack>
