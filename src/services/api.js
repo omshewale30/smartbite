@@ -1,4 +1,4 @@
-const API_URL = "https://backend-f8k4jobs6-omshewale30s-projects.vercel.app/";
+const API_URL = "https://backend-btgk54lsp-omshewale30s-projects.vercel.app/";
 
 export const fetchRecipes = async (data, isImage = false) => {
     try {
