@@ -83,7 +83,12 @@ async function getIngredientsFromImage(imagePath) {
         const imageBuffer = await fs.readFile(imagePath);
         const base64Image = imageBuffer.toString("base64");
 
-        const prompt = "Identify the ingredients visible in this fridge/ingredients image. Return a comma-separated list (e.g., 'chicken, spinach, quinoa').";
+        const prompt = `
+            You are a culinary ingredient expert analyzing images of kitchen counters or fridge contents. 
+            Identify all visible ingredients in the image. If a finished product (e.g., a sandwich, pizza) is present, deduce and list the likely ingredients used to make it, ignoring non-edible items. 
+            Return only a comma-separated list of ingredients (e.g., "chicken, spinach, quinoa") with no extra text, explanations, or formatting.
+        `;
+
         let mimeType;
         const ext = path.extname(imagePath).toLowerCase();
         console.log("Image Extension:", ext);
@@ -111,16 +116,15 @@ async function getIngredientsFromImage(imagePath) {
                 throw new Error(`Unsupported image format: ${ext}`);
         }
 
-
         const request = {
             contents: [{
                 role: 'user',
                 parts: [
-                    { text: prompt }, // Text prompt comes FIRST
+                    { text: prompt }, // Updated prompt
                     {
                         inlineData: {
                             data: base64Image,
-                            mimeType: mimeType, // or "image/png"
+                            mimeType: mimeType,
                         },
                     },
                 ],
@@ -128,14 +132,15 @@ async function getIngredientsFromImage(imagePath) {
         };
 
         const response = await visionGenerativeModel.generateContent(request);
-        const ingredients = response.response.candidates[0].content.parts[0].text;
+        const ingredients = response.response.candidates[0].content.parts[0].text.trim();
         return ingredients;
 
     } catch (error) {
         console.error("Error in getIngredientsFromImage:", error);
-        throw error; // Re-throw the error to be caught by the main handler
+        throw error; // Re-throw for main handler
     }
 }
+
 app.post("/ingredients", upload.single("image"), async (req, res) => {
     let ingredients = req.body.ingredients;
 
@@ -154,22 +159,28 @@ app.post("/ingredients", upload.single("image"), async (req, res) => {
 
 app.post("/recipes", upload.single("image"), async (req, res) => {
     let ingredients = req.body.ingredients;
+    const dietaryRestriction = req.body.dietaryRestriction;
+
     try {
         if (req.file) {
             ingredients = await getIngredientsFromImage(req.file.path);
             await fs.unlink(req.file.path);
         }
         if (!ingredients) return res.status(400).json({ error: "No ingredients provided" });
+        console.log("this is " + req.body.dietaryRestriction);
 
         const prompt = `
-      Suggest a healthy recipe using these ingredients: ${ingredients}.
-      Return a complete JSON object with exactly these fields:
-      - "name": string (recipe name)
-      - "steps": string (cooking instructions or steps numbered clearly)
-      - "calories": number (total calories)
-      - "nutrition": object with "protein", "carbs", "fat" (each as strings with units, e.g., "20g")
-      Provide only the JSON object, no extra text, markdown, or incomplete data.
-    `;
+            You are a skilled chef and nutritionist tasked with creating healthy recipes.
+            Using these ingredients: ${ingredients}, suggest a ${dietaryRestriction ? `${dietaryRestriction} ` : ""}recipe that maximizes the use of the provided items.
+            If the ingredients suggest a finished product (e.g., "bread, ham, cheese" from a sandwich), create a recipe that incorporates those components logically.
+            Return only a complete JSON object with exactly these fields:
+            - "name": string (recipe name)
+            - "steps": string (cooking instructions with steps numbered clearly, separated by newlines)
+            - "calories": number (total calories, estimated)
+            - "nutrition": object with "protein", "carbs", "fat" (each as strings with units, e.g., "20g")
+            Do not include extra text, markdown, explanations, or incomplete data outside the JSON object.
+        `;
+
         const response = await textGenerativeModel.generateContent(prompt);
         const recipeText = response.response.candidates[0].content.parts[0].text;
         console.log("Raw Recipe Text:", recipeText); // Debug raw output
