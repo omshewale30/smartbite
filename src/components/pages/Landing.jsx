@@ -10,10 +10,11 @@ import {
     HStack,
     Icon,
     Text,
-    LinkBox,
-    LinkOverlay,
+    Separator,
     VStack,
 } from "@chakra-ui/react"
+
+import ScrollLink from "@/components/ScrollLink.jsx";
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
 import backgroundImg from "/bg_image.jpeg"
@@ -57,9 +58,9 @@ function Landing() {
                     </Heading>
                 </Flex>
 
-                <HStack spacing={8} display={{ base: "none", md: "flex" }}>
-                    <Text fontWeight="medium">Features</Text>
-                    <Text fontWeight="medium">About</Text>
+                <HStack gap={10} display={{ base: "none", md: "flex" }} justify="space-between">
+                    <ScrollLink to="features" fontWeight= "medium">Features</ScrollLink>
+                    <ScrollLink to="about" fontWeight= "medium">About the Developer</ScrollLink>
                     <Text fontWeight="medium">Recipes</Text>
                 </HStack>
 
@@ -197,7 +198,7 @@ function Landing() {
             {/* Features Section */}
             <Box id="features" bg={useColorModeValue("gray.50", "gray.900")} py={20}>
                 <Container maxW="container.xl">
-                    <VStack spacing={16}>
+                    <VStack gap={16}>
                         <VStack spacing={4} textAlign="center">
                             <Heading as="h2" size="2xl" color={useColorModeValue("gray.700", "white")}>
                                 Cook Smarter, Not Harder
@@ -278,8 +279,8 @@ function Landing() {
                         <Button
                             as={Link}
                             to="/home"
-                            size="lg"
-                            mt={10}
+                            size="md"
+
                             bg="#2F855A"
                             color="white"
                             _hover={{
@@ -288,11 +289,45 @@ function Landing() {
                                 boxShadow: "lg",
                             }}
                             px={8}
+                            fontSize="sm"
+                            borderRadius="full"
+                        >
+                            More features coming soon...
+                        </Button>
+                    </VStack>
+                </Container>
+            </Box>
+            <Separator variant="solid" colorPalette = "red" size = "xl" />
+
+            <Box id="about" bg={useColorModeValue("gray.50", "gray.900")} py={20}>
+                <Container maxW="container.xl">
+                    <VStack gap={16}>
+                        <VStack gap={4} textAlign="center">
+                            <Heading as="h2" size="2xl" color={useColorModeValue("gray.700", "white")}>
+                                About the Developer
+                            </Heading>
+                            <Text fontSize="l" color={useColorModeValue("gray.600", "gray.400")} maxW="800px">
+                                Hi, I’m Om! I’m passionate about fitness and believe that what we fuel our bodies with matters just as much as how we move them. For me, cooking at home is a game-changer—it’s where I can control every ingredient, tailor meals to my goals, and cut down on waste. That’s where smArtbIte’s image feature shines: snap a pic of what’s in your fridge, and it transforms those odds and ends into something delicious, no food left behind. I built this app to make healthy, home-cooked meals effortless and personalized for you—whether you’re tweaking recipes to fit your diet or just trying to use what’s on hand. With smArtbIte, you’ll save time, reduce waste, and enjoy food that’s good for you and the planet.
+                            </Text>
+                        </VStack>
+                        <Button
+                            as={Link}
+                            to="https://om-shewale.onrender.com/"
+                            size="lg"
+                            mt={10}
+                            bg="#F6E05E"
+                            color="white"
+                            _hover={{
+
+                                transform: "translateY(-2px)",
+                                boxShadow: "lg",
+                            }}
+                            px={8}
                             height="60px"
                             fontSize="lg"
                             borderRadius="full"
                         >
-                            Explore All Features
+                            <Text color="#276749"> Visit My Portfolio</Text>
                         </Button>
                     </VStack>
                 </Container>
