@@ -1,4 +1,4 @@
-const API_URL = "https://smartbite-backend.vercel.app/;
+const API_URL = "https://smartbite-backend.vercel.app/";
 
 export const fetchRecipes = async (data, isImage = false) => {
     try {
